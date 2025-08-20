@@ -1,9 +1,23 @@
-import requests
+from API_gate import get_pokemon_parallel, save_to_json, load_from_json
 
-r = requests.get('https://pokeapi.co/api/v2/pokemon/ditto/')
-if r.status_code == 200:
-    pokemon_data = r.json()
-    pokemon_info = {
-        "name": pokemon_data["name"]
-    }
-    print(pokemon_info)
+def main():
+    filename = "pokemon_data.json"
+    force_fetch = False  # Set True to refresh cache
+
+    if not force_fetch:
+        cached_data = load_from_json(filename)
+    else:
+        cached_data = None
+
+    if cached_data and len(cached_data) > 0:
+        print(f"Loaded {len(cached_data)} Pokémon from cache")
+        pokemon_info = cached_data
+    else:
+        print("Fetching fresh Pokémon data from API...")
+        pokemon_info = get_pokemon_parallel(151)
+        save_to_json(pokemon_info, filename)
+
+    print("API data ready for use")
+
+if __name__ == "__main__":
+    main()
