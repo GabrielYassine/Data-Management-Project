@@ -1,4 +1,4 @@
 # CREATE DATABASE testdb;
 
 USE testdb;
-SELECT * FROM users;
+SELECT * FROM tournament_usage;
