@@ -8,7 +8,15 @@ def fetch_pokemon_details(url):
     r = requests.get(url)
     if r.status_code == 200:
         data = r.json()
-        return {"id": data["id"], "name": data["name"]}
+        return {
+            "id": data["id"],
+            "name": data["name"],
+            "types": [t["type"]["name"] for t in data["types"]],
+            "abilities": [a["ability"]["name"] for a in data["abilities"]],
+            "stats": {
+                stat["stat"]["name"]: stat["base_stat"] for stat in data["stats"]
+            }
+        }
     else:
         print(f"Something went wrong while fetching {url}")
         return None
@@ -31,7 +39,6 @@ def get_pokemon_parallel(amount):
             if result:
                 pokemon_info.append(result)
 
-    # Sort by ID
     pokemon_info.sort(key=lambda x: x["id"])
     return pokemon_info
 
